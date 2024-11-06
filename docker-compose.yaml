@@ -16,7 +16,8 @@ services:
 
     # Uses the Dockerfile inside the ./api folder
     # to build an image contain all the libraries
-    # you'll need to run a Flask app.
+    # you'll need to run a Flask app. tells it to go into api 
+    # to find instructions for making image and run them
     build: ./api
 
     # Give the Docker image is being built a 
@@ -33,6 +34,8 @@ services:
     volumes: ['./api:/apicode']
     ports:
       - 4000:4000
+    # ^^first port number is local machine port num, second number is port of thing on other side
+    # (remember expose 4000 in other file) can be on test
 
 
 
