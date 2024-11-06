@@ -1,40 +1,48 @@
 from flask import Flask
 from flask import make_response
-from backend.db_connection import db
-import os
-from dotenv import load_dotenv
+from flask import jsonify
+import random
+
+supportive_quotes = [
+    "You are capable of amazing things.",
+    "Believe in yourself and all that you are.",
+    "Keep going, you are doing great!",
+    "Every day is a new beginning.",
+    "You have the power to create change.",
+    "Your potential is limitless."
+]
 
 def create_app():
     app = Flask(__name__)
 
-    # Load environment variables
-    # This function reads all the values from inside
-    # the .env file (in the parent folder) so they
-    # are available in this file.  See the MySQL setup 
-    # commands below to see how they're being used.
-    load_dotenv()
 
-    # secret key that will be used for securely signing the session 
-    # cookie and can be used for any other security related needs by 
-    # extensions or your application
-    # app.config['SECRET_KEY'] = 'someCrazyS3cR3T!Key.!'
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-
-    # # these are for the DB object to be able to connect to MySQL. 
-    # app.config['MYSQL_DATABASE_USER'] = 'root'
-    app.config['MYSQL_DATABASE_USER'] = os.getenv('DB_USER').strip()
-    app.config['MYSQL_DATABASE_PASSWORD'] = os.getenv('MYSQL_ROOT_PASSWORD').strip()
-    app.config['MYSQL_DATABASE_HOST'] = os.getenv('DB_HOST').strip()
-    app.config['MYSQL_DATABASE_PORT'] = int(os.getenv('DB_PORT').strip())
-    app.config['MYSQL_DATABASE_DB'] = os.getenv('DB_NAME').strip()  # Change this to your DB name
-
-    # Initialize the database object with the settings above. 
-    app.logger.info('current_app(): starting the database connection')
-    db.init_app(app)
-
+    # Base route - home
     @app.route("/", methods=['GET'])
-    def sayHello():
-        response = make_response("Hello from your First Flask Api App")
+    def say_hello():
+        response = make_response("<h1>Hello from your First Flask App</h1>")
+        response.status_code = 200
+        return response
+    
+    # get some fake data
+    @app.route('/api/data', methods=['GET'])
+    def get_data():
+        sample_data = {"message": "Hello, World!", "status": "success"}
+        response = make_response(jsonify(sample_data))
+        response.status_code = 200
+        return response
+    
+    # a dynamic route, takes a parameter
+    @app.route('/user/<username>')
+    def user_profile(username):
+        response = make_response(f"<h1>Profile page of user: {username}</h1>")
+        response.status_code = 200
+        return response 
+    
+    # New route: Random supportive quote
+    @app.route('/api/quote', methods=['GET'])
+    def get_supportive_quote():
+        quote = random.choice(supportive_quotes)
+        response = make_response(jsonify({"quote": quote}))
         response.status_code = 200
         return response
 
