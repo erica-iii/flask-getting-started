@@ -1,0 +1,39 @@
+# --------------------------------------------------------------
+# We are building out a flask-only application 
+# with a few few routes to demonstrate some 
+# functionality
+#
+# We will build it up into 
+# --------------------------------------------------------------
+
+services:
+
+  # The Api service represents the REST API. 
+  # Inside the api/ folder, you'll find a 
+  # Dockerfile that sets up that container 
+  # specifically
+  api:
+
+    # Uses the Dockerfile inside the ./api folder
+    # to build an image contain all the libraries
+    # you'll need to run a Flask app.
+    build: ./api
+
+    # Give the Docker image is being built a 
+    # specific name so we can recognize it in 
+    # Docker Desktop
+    image: flask-test-api
+
+    # Gives the name of the Docker Container being created
+    # based on the above image a particular name
+    container_name: flask01-web-api
+
+    
+    hostname: web-api
+    volumes: ['./api:/apicode']
+    ports:
+      - 4000:4000
+
+
+
+
